@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment variables (secrets)
+.env
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Build / temp files
+dist/
+build/
+tmp/
+temp/
+
+# Coverage
+coverage/
+
+# Misc
+*.swp
