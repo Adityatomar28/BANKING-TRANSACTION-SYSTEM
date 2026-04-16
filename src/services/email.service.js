@@ -61,6 +61,7 @@ The Backend Ledger Team`;
     await sendEmail(userEmail, subject, text, html);
 }
 
+
 module.exports = {
     sendRegistrationEmail
 };
