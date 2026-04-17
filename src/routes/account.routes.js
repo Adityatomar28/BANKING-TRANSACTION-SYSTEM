@@ -14,8 +14,15 @@ const router = express.Router()
 
 router.post("/",authMiddleware.authMiddleware,createAccountController.createAccountController)
 
+/**
+ * - POST /api/transactions/system/initial-funds
+ * - Create initial funds transaction from system user
+ */
+transactionRoutes.post("/system/initial-funds", authMiddleware.authSystemUserMiddleware, transactionController.createInitialFundsTransaction)
 
-module.exports = router
+module.exports = transactionRoutes;
+
+module.exports = transactionRoutes;
 
 
 
