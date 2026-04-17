@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// ledger model ham saari entries likhte hai 
 const ledgerSchema = new mongoose.Schema(
 {
     account: {
@@ -17,7 +18,7 @@ const ledgerSchema = new mongoose.Schema(
         index: true,
         immutable: true
     },
-
+    //kis transaction ki ledger entries hai
     transaction: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "transaction",
@@ -41,7 +42,7 @@ const ledgerSchema = new mongoose.Schema(
 }
 );
 
-
+//we never modify the ledger entries therefore to prevent it 
 function preventLedgerModified(){
     throw new Error("Ledger entries are immutable and cannot be modified or deleted");
 }
@@ -57,4 +58,4 @@ ledgerSchema.pre('findOneAndReplace',preventLedgerModified)
 
 const ledgerModel = mongoose.model('ledger',ledgerSchema);
 
-module.exports = mongoose.model("Ledger", ledgerSchema);
+module.exports = ledgerModel;

@@ -22,6 +22,7 @@ const accountService = require("../models/account.models")
 const emailService = require("../services/email.service");
 const accountModel = require("../models/account.models");
 const transactionModel = require("../models/transaction.model");
+const mongoose  = require("mongoose")
 
 
 async function createTransaction(req,res){
@@ -95,6 +96,42 @@ if(balance < amount){
         message:`Insufficient balance.Current balance is ${balance}.Requested amount is ${amount}`
     })
 }
+// 5 Create Transaction (PENDING)
+const session = await transactionModel.startSession()
+// this part is provided by mongo db that if any of the task fails then it has to be roll back
+//  * 5. Create transaction (PENDING)
+//  * 6. Create DEBIT ledger entry
+//  * 7. Create CREDIT ledger entry
+//  * 8. Mark transaction COMPLETED
+session.startTransaction()
+
+const transaction = await transactionModel.create({
+    fromAccount,
+    toAccount,
+    amount,
+    idempotencyKey,
+    status:"PENDING"
+,},{session})
+
+const debitLedgerEntry = await ledgerModel.create({
+    account:toAccount,
+    amount:amount,
+    transaction:transaction._id,
+    type:"DEBIT"
+},{session})
+
+
+const creditLedgerEntry = await ledgerModel.create({
+    account:toAccount,
+    amount:amount,
+    transaction:transaction._id,
+    type:"CREDIT"
+},{session})
+
+transaction.status = "COMPLETED"
+await transaction.save({session})
+
+session.endSession()
 
 }
 
